@@ -9,7 +9,7 @@ use wasm_bindgen::JsCast;
 
 pub struct HtmlGameLoop;
 
-// TODO: How to remove 'static?
+// TODO: Need 'static?
 impl<T: 'static, U: 'static> GameLoop<T, U> for HtmlGameLoop
 where
     T: GameState<U>,
