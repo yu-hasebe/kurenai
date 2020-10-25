@@ -41,6 +41,7 @@ features = [
   "CanvasRenderingContext2d",
   "console",
   "Document",
+  "HtmlCanvasElement",
   "HtmlImageElement",
   "KeyboardEvent",
   "KeyEvent",
