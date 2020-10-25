@@ -1,4 +1,4 @@
-mod html_game_loop;
+pub mod html_game_loop;
 use crate::{game_state::GameState, graphic::html_canvas::HtmlCanvas, key_event::KeyEvent};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8,5 +8,9 @@ where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(game_state_rc: Rc<RefCell<T>>, key_event_rc: Rc<RefCell<U>>, canvas_rc: Rc<HtmlCanvas>);
+    fn run(
+        game_state_rc: Rc<RefCell<T>>,
+        key_event_rc: Rc<RefCell<U>>,
+        html_canvas_rc: Rc<HtmlCanvas>,
+    );
 }
