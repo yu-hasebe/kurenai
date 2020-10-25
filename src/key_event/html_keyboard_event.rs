@@ -34,18 +34,8 @@ impl KeyEvent for HtmlKeyboardEvent {
             keyup_event_rc.borrow_mut().update_on_keyup(event);
         }) as Box<dyn FnMut(_)>);
 
-        web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .add_event_listener_with_callback("keydown", keydown_handler.as_ref().unchecked_ref())
-            .unwrap();
-        web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .add_event_listener_with_callback("keyup", keyup_handler.as_ref().unchecked_ref())
-            .unwrap();
+        Self::add_event_listener_with_callback("keydown", keydown_handler.as_ref().unchecked_ref());
+        Self::add_event_listener_with_callback("keyup", keyup_handler.as_ref().unchecked_ref());
 
         keydown_handler.forget();
         keyup_handler.forget();
@@ -111,5 +101,14 @@ impl HtmlKeyboardEvent {
                 // TODO
             }
         }
+    }
+
+    fn add_event_listener_with_callback(type_: &str, listener: &js_sys::Function) {
+        web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .add_event_listener_with_callback(type_, listener)
+            .unwrap();
     }
 }
