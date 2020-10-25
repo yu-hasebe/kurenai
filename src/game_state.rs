@@ -4,7 +4,7 @@ pub trait GameState<T>
 where
     T: KeyEvent,
 {
-    fn key_event(&mut self, key_event: &T) {}
+    fn key_event(&mut self, _key_event: &T) {}
     fn update(&mut self) {}
-    fn draw(&self, html_canvas: &HtmlCanvas) {}
+    fn draw(&self, _html_canvas: &HtmlCanvas) {}
 }

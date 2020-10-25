@@ -4,27 +4,25 @@ use crate::{
     game_loop::{GameLoop, HtmlGameLoop},
     game_state::GameState,
     image::HtmlImage,
-    key_event::{HtmlKeyboardEvent, KeyEvent},
+    key_event::HtmlKeyboardEvent,
 };
-use std::cell::RefCell;
-use std::rc::Rc;
 
 struct HtmlGameState {
-    data: i64,
-    image: HtmlImage,
+    _data: i64,
+    _image: HtmlImage,
 }
 
 impl GameState<HtmlKeyboardEvent> for HtmlGameState {
-    fn key_event(&mut self, key_event: &HtmlKeyboardEvent) {}
+    fn key_event(&mut self, _key_event: &HtmlKeyboardEvent) {}
     fn update(&mut self) {}
-    fn draw(&self, html_canvas: &HtmlCanvas) {}
+    fn draw(&self, _html_canvas: &HtmlCanvas) {}
 }
 
 impl HtmlGameState {
     fn new() -> Self {
         Self {
-            data: 0,
-            image: HtmlImage::new(&[], "gif"),
+            _data: 0,
+            _image: HtmlImage::new(&[], "gif"),
         }
     }
 }
