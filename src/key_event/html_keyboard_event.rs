@@ -65,6 +65,9 @@ impl KeyEvent for HtmlKeyboardEvent {
 impl HtmlKeyboardEvent {
     fn update_on_keydown(&mut self, event: web_sys::KeyboardEvent) {
         match event.key_code() {
+            web_sys::KeyEvent::DOM_VK_RETURN => {
+                self.enter = true;
+            }
             web_sys::KeyEvent::DOM_VK_LEFT => {
                 self.arrow_left = true;
             }
@@ -85,6 +88,9 @@ impl HtmlKeyboardEvent {
 
     fn update_on_keyup(&mut self, event: web_sys::KeyboardEvent) {
         match event.key_code() {
+            web_sys::KeyEvent::DOM_VK_RETURN => {
+                self.enter = false;
+            }
             web_sys::KeyEvent::DOM_VK_LEFT => {
                 self.arrow_left = false;
             }
