@@ -1,4 +1,4 @@
-use crate::{game_state::GameState, graphic::html_canvas::HtmlCanvas, key_event::KeyEvent};
+use crate::{canvas::HtmlCanvas, game_state::GameState, key_event::KeyEvent};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
