@@ -1,5 +1,5 @@
 # kurenai
-A 2d game engine for web-assembly. In development.
+A 2d game engine for WebAssembly. In development.
 
 # sample
 
