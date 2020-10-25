@@ -35,8 +35,9 @@ impl HtmlGameState {
 fn test() {
     let html_game_state_rc = Rc::new(RefCell::new(HtmlGameState::new()));
     let html_canvas_rc = Rc::new(HtmlCanvas::new(
-        "main",
+        "main-canvas",
         &Dot::new(DotCoord(480), DotCoord(480)),
+        "game-container",
     ));
     let html_keyboard_event_rc = Rc::new(RefCell::new(HtmlKeyboardEvent::new()));
     HtmlGameLoop::run(html_game_state_rc, html_keyboard_event_rc, html_canvas_rc);

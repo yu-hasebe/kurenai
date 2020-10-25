@@ -6,9 +6,9 @@ pub struct HtmlCanvas {
 }
 
 impl HtmlCanvas {
-    pub fn new(id: &str, size: &Dot) -> Self {
-        let canvas = Self::create_html_canvas_element(id, size);
-        // TODO: Add the canvas to an html element
+    pub fn new(canvas_id: &str, canvas_size: &Dot, id_append_to: &str) -> Self {
+        let canvas = Self::create_html_canvas_element(canvas_id, canvas_size);
+        Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);
         Self { context }
     }
@@ -54,6 +54,17 @@ impl HtmlCanvas {
             .dyn_into::<web_sys::HtmlCanvasElement>()
             .map_err(|_| ())
             .unwrap()
+    }
+
+    fn append_html_canvas_element_to(id: &str, canvas: &web_sys::HtmlCanvasElement) {
+        web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .get_element_by_id(id)
+            .unwrap()
+            .append_child(canvas)
+            .unwrap();
     }
 
     fn context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {

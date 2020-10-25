@@ -80,9 +80,7 @@ impl HtmlKeyboardEvent {
             web_sys::KeyEvent::DOM_VK_DOWN => {
                 self.arrow_down = true;
             }
-            _ => {
-                // TODO
-            }
+            _ => {}
         }
     }
 
@@ -103,9 +101,7 @@ impl HtmlKeyboardEvent {
             web_sys::KeyEvent::DOM_VK_DOWN => {
                 self.arrow_down = false;
             }
-            _ => {
-                // TODO
-            }
+            _ => {}
         }
     }
 
