@@ -3,6 +3,7 @@ use crate::{
     key_event::KeyEvent,
 };
 use std::cell::RefCell;
+use std::clone::Clone;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -10,16 +11,13 @@ use wasm_bindgen::JsCast;
 pub struct HtmlGameLoop;
 
 // TODO: Need 'static?
-impl<T: 'static, U: 'static> GameLoop<T, U> for HtmlGameLoop
+impl<T: 'static, U: Clone + 'static> GameLoop<T, U> for HtmlGameLoop
 where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(
-        game_state_rc: Rc<RefCell<T>>,
-        key_event_rc: Rc<RefCell<U>>,
-        html_canvas_rc: Rc<HtmlCanvas>,
-    ) {
+    fn run(game_state_rc: Rc<RefCell<T>>, html_canvas_rc: Rc<HtmlCanvas>) {
+        let key_event_rc = Rc::new(RefCell::new(U::new()));
         U::run(key_event_rc.clone());
 
         let closure_rc = Rc::new(RefCell::new(None));

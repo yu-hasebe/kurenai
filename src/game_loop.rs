@@ -8,9 +8,5 @@ where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(
-        game_state_rc: Rc<RefCell<T>>,
-        key_event_rc: Rc<RefCell<U>>,
-        html_canvas_rc: Rc<HtmlCanvas>,
-    );
+    fn run(game_state_rc: Rc<RefCell<T>>, html_canvas_rc: Rc<HtmlCanvas>);
 }
