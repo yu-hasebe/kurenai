@@ -7,18 +7,19 @@ where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(game_state_rc: Rc<RefCell<T>>, html_canvas_rc: Rc<HtmlCanvas>);
+    fn run(game_state: T, html_canvas: HtmlCanvas);
 }
 
 pub struct HtmlGameLoop;
 
-// TODO: Need 'static?
 impl<T: 'static, U: 'static> GameLoop<T, U> for HtmlGameLoop
 where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(game_state_rc: Rc<RefCell<T>>, html_canvas_rc: Rc<HtmlCanvas>) {
+    fn run(game_state: T, html_canvas: HtmlCanvas) {
+        let game_state_rc = Rc::new(RefCell::new(game_state));
+        let html_canvas_rc = Rc::new(html_canvas);
         let key_event_rc = Rc::new(RefCell::new(U::new()));
         U::run(key_event_rc.clone());
 
