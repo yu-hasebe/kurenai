@@ -1,4 +1,4 @@
-use crate::graphic::{dot::Dot, html_image::HtmlImage};
+use crate::{dot::Dot, image::HtmlImage};
 use wasm_bindgen::JsCast;
 
 pub struct HtmlCanvas {

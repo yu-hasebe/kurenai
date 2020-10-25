@@ -5,17 +5,13 @@ A 2d game engine for WebAssembly. In development.
 
 ```rust
 use crate::{
-    game_loop::{html_game_loop::HtmlGameLoop, GameLoop},
+    canvas::HtmlCanvas,
+    dot::{Dot, DotCoord},
+    game_loop::{GameLoop, HtmlGameLoop},
     game_state::GameState,
-    graphic::{
-        dot::{Dot, DotCoord},
-        html_canvas::HtmlCanvas,
-        html_image::HtmlImage,
-    },
-    key_event::{html_keyboard_event::HtmlKeyboardEvent, KeyEvent},
+    image::HtmlImage,
+    key_event::HtmlKeyboardEvent,
 };
-use std::cell::RefCell;
-use std::rc::Rc;
 
 struct HtmlGameState {
     data: i64,
@@ -38,13 +34,12 @@ impl HtmlGameState {
 }
 
 fn main() {
-    let html_game_state_rc = Rc::new(RefCell::new(HtmlGameState::new()));
-    let html_canvas_rc = Rc::new(HtmlCanvas::new(
+    let html_game_state = HtmlGameState::new();
+    let html_canvas = HtmlCanvas::new(
         "main-canvas",
         &Dot::new(DotCoord(480), DotCoord(480)),
         "game-container",
-    ));
-    let html_keyboard_event_rc = Rc::new(RefCell::new(HtmlKeyboardEvent::new()));
-    HtmlGameLoop::run(html_game_state_rc, html_keyboard_event_rc, html_canvas_rc);
+    );
+    HtmlGameLoop::run(html_game_state, html_canvas);
 }
 ```
