@@ -8,15 +8,5 @@ where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(game_state: Rc<RefCell<T>>, key_event: Rc<RefCell<U>>);
-}
-
-pub struct HtmlGameLoop;
-
-impl<T, U> GameLoop<T, U> for HtmlGameLoop
-where
-    T: GameState<U>,
-    U: KeyEvent,
-{
-    fn run(game_state: Rc<RefCell<T>>, key_event: Rc<RefCell<U>>) {}
+    fn run(game_state_rc: Rc<RefCell<T>>, key_event_rc: Rc<RefCell<U>>);
 }
