@@ -1,4 +1,8 @@
 use crate::key_event::KeyEvent;
+use std::cell::RefCell;
+use std::rc::Rc;
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 pub struct HtmlKeyboardEvent {
     enter: bool,
@@ -9,6 +13,44 @@ pub struct HtmlKeyboardEvent {
 }
 
 impl KeyEvent for HtmlKeyboardEvent {
+    fn new() -> Self {
+        Self {
+            enter: false,
+            arrow_left: false,
+            arrow_up: false,
+            arrow_right: false,
+            arrow_down: false,
+        }
+    }
+
+    fn run(key_event_rc: Rc<RefCell<Self>>) {
+        let keydown_event_rc = key_event_rc.clone();
+        let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
+            keydown_event_rc.borrow_mut().update_on_keydown(event);
+        }) as Box<dyn FnMut(_)>);
+
+        let keyup_event_rc = key_event_rc.clone();
+        let keyup_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
+            keyup_event_rc.borrow_mut().update_on_keyup(event);
+        }) as Box<dyn FnMut(_)>);
+
+        web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .add_event_listener_with_callback("keydown", keydown_handler.as_ref().unchecked_ref())
+            .unwrap();
+        web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .add_event_listener_with_callback("keyup", keyup_handler.as_ref().unchecked_ref())
+            .unwrap();
+
+        keydown_handler.forget();
+        keyup_handler.forget();
+    }
+
     fn enter(&self) -> bool {
         self.enter
     }
@@ -27,5 +69,47 @@ impl KeyEvent for HtmlKeyboardEvent {
 
     fn arrow_down(&self) -> bool {
         self.arrow_down
+    }
+}
+
+impl HtmlKeyboardEvent {
+    fn update_on_keydown(&mut self, event: web_sys::KeyboardEvent) {
+        match event.key_code() {
+            web_sys::KeyEvent::DOM_VK_LEFT => {
+                self.arrow_left = true;
+            }
+            web_sys::KeyEvent::DOM_VK_UP => {
+                self.arrow_up = true;
+            }
+            web_sys::KeyEvent::DOM_VK_RIGHT => {
+                self.arrow_right = true;
+            }
+            web_sys::KeyEvent::DOM_VK_DOWN => {
+                self.arrow_down = true;
+            }
+            _ => {
+                // TODO
+            }
+        }
+    }
+
+    fn update_on_keyup(&mut self, event: web_sys::KeyboardEvent) {
+        match event.key_code() {
+            web_sys::KeyEvent::DOM_VK_LEFT => {
+                self.arrow_left = false;
+            }
+            web_sys::KeyEvent::DOM_VK_UP => {
+                self.arrow_up = false;
+            }
+            web_sys::KeyEvent::DOM_VK_RIGHT => {
+                self.arrow_right = false;
+            }
+            web_sys::KeyEvent::DOM_VK_DOWN => {
+                self.arrow_down = false;
+            }
+            _ => {
+                // TODO
+            }
+        }
     }
 }
