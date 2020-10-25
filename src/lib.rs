@@ -1,5 +1,6 @@
 mod game_loop;
 mod game_state;
+mod graphic;
 mod key_event;
 use wasm_bindgen::prelude::*;
 use web_sys::console;
