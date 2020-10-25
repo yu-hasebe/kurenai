@@ -1,4 +1,4 @@
-mod html_keyboard_event;
+pub mod html_keyboard_event;
 use std::cell::RefCell;
 use std::rc::Rc;
 

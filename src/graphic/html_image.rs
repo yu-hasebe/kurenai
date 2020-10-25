@@ -1,5 +1,3 @@
-use std::path::Path;
-
 pub struct HtmlImage {
     image: web_sys::HtmlImageElement,
 }
