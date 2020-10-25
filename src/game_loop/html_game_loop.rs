@@ -1,4 +1,7 @@
-use crate::{game_loop::GameLoop, game_state::GameState, key_event::KeyEvent};
+use crate::{
+    game_loop::GameLoop, game_state::GameState, graphic::html_canvas::HtmlCanvas,
+    key_event::KeyEvent,
+};
 use std::cell::RefCell;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
@@ -12,7 +15,11 @@ where
     T: GameState<U>,
     U: KeyEvent,
 {
-    fn run(game_state_rc: Rc<RefCell<T>>, key_event_rc: Rc<RefCell<U>>) {
+    fn run(
+        game_state_rc: Rc<RefCell<T>>,
+        key_event_rc: Rc<RefCell<U>>,
+        html_canvas_rc: Rc<HtmlCanvas>,
+    ) {
         U::run(key_event_rc.clone());
 
         let closure_rc = Rc::new(RefCell::new(None));
@@ -20,9 +27,10 @@ where
         *closure.borrow_mut() = Some(Closure::wrap(Box::new(move || {
             let mut game_state = game_state_rc.borrow_mut();
             let key_event = key_event_rc.borrow();
+            let html_canvas = html_canvas_rc.clone();
             game_state.key_event(&key_event);
             game_state.update();
-            game_state.draw();
+            game_state.draw(&html_canvas);
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());

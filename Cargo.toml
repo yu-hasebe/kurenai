@@ -23,6 +23,8 @@ lto = true
 [dependencies]
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
+base64 = "0.13.0"
+derive-new = "0.5.8"
 js-sys = "0.3.22"
 wasm-bindgen = "0.2.45"
 
@@ -36,8 +38,11 @@ wee_alloc = { version = "0.4.2", optional = true }
 [dependencies.web-sys]
 version = "0.3.22"
 features = [
+  "CanvasRenderingContext2d",
   "console",
   "Document",
+  "HtmlCanvasElement",
+  "HtmlImageElement",
   "KeyboardEvent",
   "KeyEvent",
   "Window",
