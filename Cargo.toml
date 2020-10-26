@@ -1,12 +1,13 @@
 # You must change these to your own details.
 [package]
 name = "kurenai"
-description = "A 2d game engine in web-assembly"
+description = "A 2d game engine for web-assembly"
 version = "0.1.0"
 authors = ["yu-hasebe <yu.has128@gmail.com>"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
