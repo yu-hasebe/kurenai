@@ -1,3 +1,4 @@
+#[derive(Clone, Debug)]
 pub struct HtmlImage {
     image: web_sys::HtmlImageElement,
 }

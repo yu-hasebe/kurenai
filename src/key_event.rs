@@ -11,6 +11,7 @@ pub trait KeyEvent {
     fn arrow_down(&self) -> bool;
 }
 
+#[derive(Clone, Debug)]
 pub struct HtmlKeyboardEvent {
     enter: bool,
     arrow_left: bool,

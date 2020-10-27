@@ -1,6 +1,7 @@
 use crate::image::HtmlImage;
 use wasm_bindgen::JsCast;
 
+#[derive(Clone, Debug)]
 pub struct HtmlCanvas {
     context: web_sys::CanvasRenderingContext2d,
 }
