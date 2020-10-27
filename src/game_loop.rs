@@ -10,6 +10,7 @@ where
     fn run(game_state: T, html_canvas: HtmlCanvas);
 }
 
+#[derive(Clone, Debug)]
 pub struct HtmlGameLoop;
 
 impl<T: 'static, U: 'static> GameLoop<T, U> for HtmlGameLoop
