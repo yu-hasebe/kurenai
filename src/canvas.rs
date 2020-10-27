@@ -1,4 +1,4 @@
-use crate::{dot::Dot, image::HtmlImage};
+use crate::image::HtmlImage;
 use wasm_bindgen::JsCast;
 
 pub struct HtmlCanvas {
@@ -6,8 +6,8 @@ pub struct HtmlCanvas {
 }
 
 impl HtmlCanvas {
-    pub fn new(canvas_id: &str, canvas_size: &Dot, id_append_to: &str) -> Self {
-        let canvas = Self::create_html_canvas_element(canvas_id, canvas_size);
+    pub fn new(canvas_id: &str, canvas_width: i64, canvas_height: i64, id_append_to: &str) -> Self {
+        let canvas = Self::create_html_canvas_element(canvas_id, canvas_width, canvas_height);
         Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);
         Self { context }
@@ -16,27 +16,31 @@ impl HtmlCanvas {
     pub fn draw(
         &self,
         image: &HtmlImage,
-        begin_at_on_image: &Dot,
-        size_on_image: &Dot,
-        begin_at_on_canvas: &Dot,
-        size_on_canvas: &Dot,
+        begin_x_on_image: i64,
+        begin_y_on_image: i64,
+        width_on_image: i64,
+        height_on_image: i64,
+        begin_x_on_canvas: i64,
+        begin_y_on_canvas: i64,
+        width_on_canvas: i64,
+        height_on_canvas: i64,
     ) {
         self.context
             .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
                 image.image(),
-                begin_at_on_image.x().0 as f64,
-                begin_at_on_image.y().0 as f64,
-                size_on_image.x().0 as f64,
-                size_on_image.y().0 as f64,
-                begin_at_on_canvas.x().0 as f64,
-                begin_at_on_canvas.y().0 as f64,
-                size_on_canvas.x().0 as f64,
-                size_on_canvas.y().0 as f64,
+                begin_x_on_image as f64,
+                begin_y_on_image as f64,
+                width_on_image as f64,
+                height_on_image as f64,
+                begin_x_on_canvas as f64,
+                begin_y_on_canvas as f64,
+                width_on_canvas as f64,
+                height_on_canvas as f64,
             )
             .unwrap();
     }
 
-    fn create_html_canvas_element(id: &str, size: &Dot) -> web_sys::HtmlCanvasElement {
+    fn create_html_canvas_element(id: &str, width: i64, height: i64) -> web_sys::HtmlCanvasElement {
         let canvas = web_sys::window()
             .unwrap()
             .document()
@@ -45,10 +49,10 @@ impl HtmlCanvas {
             .unwrap();
         canvas.set_attribute("id", id).unwrap();
         canvas
-            .set_attribute("width", size.x().0.to_string().as_str())
+            .set_attribute("width", width.to_string().as_str())
             .unwrap();
         canvas
-            .set_attribute("height", size.y().0.to_string().as_str())
+            .set_attribute("height", height.to_string().as_str())
             .unwrap();
         canvas
             .dyn_into::<web_sys::HtmlCanvasElement>()
