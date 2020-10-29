@@ -19,6 +19,7 @@ lto = true
 base64 = "0.13.0"
 derive-new = "0.5.8"
 js-sys = "0.3.22"
+num-traits = "0.2.12"
 wasm-bindgen = "0.2.45"
 
 [dependencies.web-sys]
