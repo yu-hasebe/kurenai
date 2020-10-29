@@ -51,12 +51,12 @@ where
         }
     }
 
-    fn x(&self) -> U {
-        self.x
+    fn x(&self) -> &U {
+        &self.x
     }
 
-    fn y(&self) -> U {
-        self.y
+    fn y(&self) -> &U {
+        &self.y
     }
 }
 
