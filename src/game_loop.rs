@@ -2,23 +2,15 @@ use crate::{canvas::HtmlCanvas, game_state::GameState, key_event::KeyEvent};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
-pub trait GameLoop<T, U>
-where
-    T: GameState<U>,
-    U: KeyEvent,
-{
-    fn run(game_state: T, html_canvas: HtmlCanvas);
-}
-
 #[derive(Clone, Debug)]
 pub struct HtmlGameLoop;
 
-impl<T: 'static, U: 'static> GameLoop<T, U> for HtmlGameLoop
-where
-    T: GameState<U>,
-    U: KeyEvent,
-{
-    fn run(game_state: T, html_canvas: HtmlCanvas) {
+impl HtmlGameLoop {
+    pub fn run<T: 'static, U: 'static>(game_state: T, html_canvas: HtmlCanvas)
+    where
+        T: GameState<U>,
+        U: KeyEvent,
+    {
         let game_state_rc = Rc::new(RefCell::new(game_state));
         let html_canvas_rc = Rc::new(html_canvas);
         let key_event_rc = Rc::new(RefCell::new(U::new()));
