@@ -4,12 +4,12 @@ use std::string::ToString;
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
-pub struct HtmlCanvas {
+pub struct Canvas {
     context: web_sys::CanvasRenderingContext2d,
 }
 
-impl HtmlCanvas {
-    /// Create a new HtmlCanvas instance and append it to an html_element.
+impl Canvas {
+    /// Create a new Canvas instance and append it to an html_element.
     pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Self
     where
         T: Point<Dot, U>,

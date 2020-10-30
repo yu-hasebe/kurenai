@@ -1,5 +1,5 @@
 use crate::{
-    canvas::HtmlCanvas,
+    canvas::Canvas,
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
@@ -12,7 +12,7 @@ where
     T: Point<Dot, U>,
     U: NumAssign + ToPrimitive + ToString,
 {
-    fn draw(&self, canvas: &HtmlCanvas, begin_dot_on_canvas: T) -> Result<(), String> {
+    fn draw(&self, canvas: &Canvas, begin_dot_on_canvas: T) -> Result<(), String> {
         canvas.draw_image_with_html_image_element(
             self.image(),
             self.begin_dot_on_image(),

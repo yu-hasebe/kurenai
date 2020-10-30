@@ -1,14 +1,15 @@
 #[derive(Clone, Debug)]
-pub struct HtmlImage {
+pub struct Image {
     image: web_sys::HtmlImageElement,
 }
 
-impl HtmlImage {
+impl Image {
     pub fn image(&self) -> &web_sys::HtmlImageElement {
         &self.image
     }
 
     pub fn new(bytes: &[u8], extension: &str) -> Self {
+        // TODO: Add validation
         let image = web_sys::HtmlImageElement::new().unwrap();
         let src = format!(
             "data:image/{};base64,{}",

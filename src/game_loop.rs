@@ -1,18 +1,18 @@
-use crate::{canvas::HtmlCanvas, game_state::GameState, key_event::KeyEvent};
+use crate::{canvas::Canvas, game_state::GameState, key_event::KeyEvent};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
 #[derive(Clone, Debug)]
-pub struct HtmlGameLoop;
+pub struct GameLoop;
 
-impl HtmlGameLoop {
-    pub fn run<T: 'static, U: 'static>(game_state: T, html_canvas: HtmlCanvas)
+impl GameLoop {
+    pub fn run<T: 'static, U: 'static>(game_state: T, canvas: Canvas)
     where
         T: GameState<U>,
         U: KeyEvent,
     {
         let game_state_rc = Rc::new(RefCell::new(game_state));
-        let html_canvas_rc = Rc::new(html_canvas);
+        let canvas_rc = Rc::new(canvas);
         let key_event_rc = Rc::new(RefCell::new(U::new()));
         U::run(key_event_rc.clone());
 
@@ -21,17 +21,17 @@ impl HtmlGameLoop {
         *closure.borrow_mut() = Some(Closure::wrap(Box::new(move || {
             let mut game_state = game_state_rc.borrow_mut();
             let key_event = key_event_rc.borrow();
-            let html_canvas = html_canvas_rc.clone();
+            let canvas = canvas_rc.clone();
             game_state.key_event(&key_event);
             game_state.update();
-            game_state.draw(&html_canvas);
+            game_state.draw(&canvas);
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());
     }
 }
 
-impl HtmlGameLoop {
+impl GameLoop {
     fn request_animation_frame(f: &Closure<dyn FnMut()>) {
         web_sys::window()
             .unwrap()

@@ -1,31 +1,31 @@
 use crate::{
-    canvas::HtmlCanvas,
-    game_loop::HtmlGameLoop,
+    canvas::Canvas,
+    game_loop::GameLoop,
     game_state::GameState,
-    image::HtmlImage,
-    key_event::HtmlKeyboardEvent,
+    image::Image,
+    key_event::KeyboardEvent,
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
 use std::marker::PhantomData;
 use std::string::ToString;
 
-struct HtmlGameState {
+struct TestGameState {
     _data: i64,
-    _image: HtmlImage,
+    _image: Image,
 }
 
-impl GameState<HtmlKeyboardEvent> for HtmlGameState {
-    fn key_event(&mut self, _key_event: &HtmlKeyboardEvent) {}
+impl GameState<KeyboardEvent> for TestGameState {
+    fn key_event(&mut self, _key_event: &KeyboardEvent) {}
     fn update(&mut self) {}
-    fn draw(&self, _html_canvas: &HtmlCanvas) {}
+    fn draw(&self, _canvas: &Canvas) {}
 }
 
-impl HtmlGameState {
+impl TestGameState {
     fn new() -> Self {
         Self {
             _data: 0,
-            _image: HtmlImage::new(&[], "gif"),
+            _image: Image::new(&[], "gif"),
         }
     }
 }
@@ -63,11 +63,11 @@ where
 #[test]
 #[should_panic]
 fn main() {
-    let html_game_state = HtmlGameState::new();
-    let html_canvas = HtmlCanvas::new(
+    let test_game_state = TestGameState::new();
+    let canvas = Canvas::new(
         "main-canvas",
         GamePoint::<Dot, i64>::new(480, 480),
         "game-container",
     );
-    HtmlGameLoop::run(html_game_state, html_canvas);
+    GameLoop::run(test_game_state, canvas);
 }

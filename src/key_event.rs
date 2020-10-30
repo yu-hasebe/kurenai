@@ -12,7 +12,7 @@ pub trait KeyEvent {
 }
 
 #[derive(Clone, Debug)]
-pub struct HtmlKeyboardEvent {
+pub struct KeyboardEvent {
     enter: bool,
     arrow_left: bool,
     arrow_up: bool,
@@ -20,7 +20,7 @@ pub struct HtmlKeyboardEvent {
     arrow_down: bool,
 }
 
-impl KeyEvent for HtmlKeyboardEvent {
+impl KeyEvent for KeyboardEvent {
     fn new() -> Self {
         Self {
             enter: false,
@@ -70,7 +70,7 @@ impl KeyEvent for HtmlKeyboardEvent {
     }
 }
 
-impl HtmlKeyboardEvent {
+impl KeyboardEvent {
     fn update_on_keydown(&mut self, event: web_sys::KeyboardEvent) {
         match event.key_code() {
             web_sys::KeyEvent::DOM_VK_RETURN => {
