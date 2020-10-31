@@ -3,13 +3,13 @@ pub mod image_repository;
 use crate::point::{Dot, Point};
 use image_id::ImageId;
 use num_traits::{NumAssign, ToPrimitive};
+use std::clone::Clone;
 use std::rc::Rc;
 
 #[derive(Clone, Debug)]
-pub struct Image<T, U>
+pub struct Image<T>
 where
-    T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive,
+    T: Clone + Point<Dot>,
 {
     image_id: ImageId,
     source_image: Rc<web_sys::HtmlImageElement>,
@@ -17,10 +17,9 @@ where
     size: T,
 }
 
-impl<T, U> Image<T, U>
+impl<T> Image<T>
 where
-    T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive,
+    T: Clone + Point<Dot>,
 {
     pub fn new(
         image_id: ImageId,
@@ -36,8 +35,8 @@ where
         }
     }
 
-    pub fn source_image(&self) -> &web_sys::HtmlImageElement {
-        &self.source_image.clone()
+    pub fn source_image(&self) -> Rc<web_sys::HtmlImageElement> {
+        self.source_image.clone()
     }
 
     pub fn begin_dot_on_source_image(&self) -> &T {

@@ -5,14 +5,14 @@ use crate::{
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
+use std::clone::Clone;
 
-pub trait GameState<T, U, V>
+pub trait GameState<T, U>
 where
     T: KeyEvent,
-    U: Point<Dot, V>,
-    V: NumAssign + ToPrimitive,
+    U: Clone + Point<Dot>,
 {
     fn key_event(&mut self, _key_event: &T) {}
     fn update(&mut self) {}
-    fn draw(&self, _image_repository: &ImageRepository<U, V>, _canvas: &Canvas) {}
+    fn draw(&self, _image_repository: &ImageRepository<U>, _canvas: &Canvas) {}
 }

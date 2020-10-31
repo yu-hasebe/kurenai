@@ -4,26 +4,27 @@ use crate::{
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
+use std::clone::Clone;
+use std::ops::Deref;
 
 /// You can draw structs that implement Sprite.
-pub trait Sprite<T, U>
+pub trait Sprite<T>
 where
-    T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive,
+    T: Clone + Point<Dot>,
 {
     fn draw(
         &self,
-        image_repository: &ImageRepository<T, U>,
+        image_repository: &ImageRepository<T>,
         canvas: &Canvas,
         begin_dot_on_canvas: T,
     ) -> Result<(), String> {
-        let image = image_repository.find(*self.image_id());
+        let image = image_repository.find(self.image_id().clone()).unwrap();
         canvas.draw_image_with_html_image_element(
-            image.source_image(),
-            *image.begin_dot_on_source_image(),
-            *image.size(),
+            image.source_image().deref(),
+            image.begin_dot_on_source_image().clone(),
+            image.size().clone(),
             begin_dot_on_canvas,
-            *self.size(),
+            self.size().clone(),
         )
     }
 

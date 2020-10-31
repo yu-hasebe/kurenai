@@ -6,23 +6,22 @@ use crate::{
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, clone::Clone, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
 #[derive(Clone, Debug)]
 pub struct GameLoop;
 
 impl GameLoop {
-    pub fn run<T: 'static, U: 'static, V, W>(
+    pub fn run<T: 'static, U: 'static, V: 'static>(
         game_state: T,
-        image_repository: ImageRepository<V, W>,
+        image_repository: ImageRepository<V>,
         canvas: Canvas,
     ) -> Result<(), String>
     where
-        T: GameState<U, V, W>,
+        T: GameState<U, V>,
         U: KeyEvent,
-        V: Point<Dot, W>,
-        W: NumAssign + ToPrimitive,
+        V: Clone + Point<Dot>,
     {
         let game_state_rc = Rc::new(RefCell::new(game_state));
         let image_repository_rc = Rc::new(image_repository);

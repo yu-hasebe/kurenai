@@ -9,10 +9,9 @@ pub struct Canvas {
 
 impl Canvas {
     /// Create a new Canvas instance and append it to an html_element.
-    pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
+    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
     where
-        T: Point<Dot, U>,
-        U: NumAssign + ToPrimitive,
+        T: Point<Dot>,
     {
         let canvas = Self::create_html_canvas_element(
             canvas_id,
@@ -35,7 +34,7 @@ impl Canvas {
     }
 
     /// Call this function through Sprite trait. Do not call it directly.
-    pub fn draw_image_with_html_image_element<T, U>(
+    pub fn draw_image_with_html_image_element<T>(
         &self,
         image: &web_sys::HtmlImageElement,
         begin_dot_on_image: T,
@@ -44,8 +43,7 @@ impl Canvas {
         size_dot_on_canvas: T,
     ) -> Result<(), String>
     where
-        T: Point<Dot, U>,
-        U: NumAssign + ToPrimitive,
+        T: Point<Dot>,
     {
         let begin_dot_x_on_image = begin_dot_on_image.x().to_f64().ok_or("parse error")?;
         let begin_dot_y_on_image = begin_dot_on_image.y().to_f64().ok_or("parse error")?;

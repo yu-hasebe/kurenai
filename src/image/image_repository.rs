@@ -3,35 +3,35 @@ use crate::{
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
+use std::clone::Clone;
 use std::rc::Rc;
 
-pub struct ImageRepository<T, U>
+#[derive(Clone, Debug)]
+pub struct ImageRepository<T>
 where
-    T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive,
+    T: Clone + Point<Dot>,
 {
-    image: Image<T, U>,
+    image: Image<T>,
 }
 
-impl<T, U> ImageRepository<T, U>
+impl<T> ImageRepository<T>
 where
-    T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive,
+    T: Clone + Point<Dot>,
 {
-    fn new(
+    pub fn new(
         image_id: ImageId,
         source_image: Rc<web_sys::HtmlImageElement>,
         begin_dot_on_source_image: T,
         size: T,
     ) -> Self {
         Self {
-            image: Image::<T, U>::new(image_id, source_image, begin_dot_on_source_image, size),
+            image: Image::<T>::new(image_id, source_image, begin_dot_on_source_image, size),
         }
     }
-    fn find(&self) -> Result<Image<T, U>, String> {
-        Err("error")
+    pub fn find(&self, image_id: ImageId) -> Result<Image<T>, String> {
+        Ok(self.image.clone())
     }
-    fn save(&self) -> Result<(), String> {
+    pub fn save(&self) -> Result<(), String> {
         Ok(())
     }
 }
