@@ -4,4 +4,5 @@ pub trait Point<T, U> {
     fn y(&self) -> &U;
 }
 
+#[derive(Clone, Copy, Debug)]
 pub enum Dot {}
