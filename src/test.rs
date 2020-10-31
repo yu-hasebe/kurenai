@@ -8,7 +8,6 @@ use crate::{
 };
 use num_traits::{NumAssign, ToPrimitive};
 use std::marker::PhantomData;
-use std::string::ToString;
 
 struct TestGameState {
     _data: i64,
@@ -32,7 +31,7 @@ impl TestGameState {
 
 struct GamePoint<T, U>
 where
-    U: Clone + Copy + NumAssign + ToPrimitive + ToString,
+    U: Clone + Copy + NumAssign + ToPrimitive,
 {
     unit: PhantomData<T>,
     x: U,
@@ -41,7 +40,7 @@ where
 
 impl<T, U> Point<T, U> for GamePoint<T, U>
 where
-    U: Clone + Copy + NumAssign + ToPrimitive + ToString,
+    U: Clone + Copy + NumAssign + ToPrimitive,
 {
     fn new(x: U, y: U) -> Self {
         Self {

@@ -1,6 +1,5 @@
 use crate::point::{Dot, Point};
 use num_traits::{NumAssign, ToPrimitive};
-use std::string::ToString;
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
@@ -13,12 +12,22 @@ impl Canvas {
     pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
     where
         T: Point<Dot, U>,
-        U: NumAssign + ToPrimitive + ToString,
+        U: NumAssign + ToPrimitive,
     {
         let canvas = Self::create_html_canvas_element(
             canvas_id,
-            canvas_size.x().to_string().as_str(),
-            canvas_size.y().to_string().as_str(),
+            canvas_size
+                .x()
+                .to_f64()
+                .ok_or("parse error")?
+                .to_string()
+                .as_str(),
+            canvas_size
+                .y()
+                .to_f64()
+                .ok_or("parse error")?
+                .to_string()
+                .as_str(),
         );
         Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);

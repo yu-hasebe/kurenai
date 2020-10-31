@@ -3,13 +3,12 @@ use crate::{
     point::{Dot, Point},
 };
 use num_traits::{NumAssign, ToPrimitive};
-use std::string::ToString;
 
 /// You can draw structs that implement Sprite.
 pub trait Sprite<T, U>
 where
     T: Point<Dot, U>,
-    U: NumAssign + ToPrimitive + ToString,
+    U: NumAssign + ToPrimitive,
 {
     fn draw(&self, canvas: &Canvas, begin_dot_on_canvas: T) -> Result<(), String> {
         canvas.draw_image_with_html_image_element(
