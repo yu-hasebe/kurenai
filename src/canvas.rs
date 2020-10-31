@@ -7,7 +7,6 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    /// Create a new Canvas instance and append it to an html_element.
     pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
     where
         T: Point<Dot>,
@@ -22,7 +21,6 @@ impl Canvas {
         Ok(Self { context })
     }
 
-    /// Call this function through Sprite trait. Do not call it directly.
     pub fn draw_image_with_html_image_element<T>(
         &self,
         image: &web_sys::HtmlImageElement,

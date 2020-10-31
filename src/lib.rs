@@ -5,5 +5,5 @@ pub mod image;
 pub mod key_event;
 pub mod point;
 pub mod sprite;
-//#[cfg(test)]
-//mod test;
+#[cfg(test)]
+mod test;

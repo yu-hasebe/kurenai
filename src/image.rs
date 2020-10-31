@@ -2,7 +2,7 @@ pub mod image_id;
 pub mod image_repository;
 use crate::point::{Dot, Point};
 use image_id::ImageId;
-use std::{clone::Clone, rc::Rc};
+use std::{clone::Clone, ops::Deref, rc::Rc};
 
 #[derive(Clone, Debug)]
 pub struct Image<T>
@@ -37,8 +37,8 @@ where
         &self.image_id
     }
 
-    pub fn source_image(&self) -> Rc<web_sys::HtmlImageElement> {
-        self.source_image.clone()
+    pub fn source_image(&self) -> &web_sys::HtmlImageElement {
+        self.source_image.deref()
     }
 
     pub fn begin_dot_on_source_image(&self) -> &T {
