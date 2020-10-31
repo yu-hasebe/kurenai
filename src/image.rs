@@ -33,6 +33,10 @@ where
         }
     }
 
+    pub fn image_id(&self) -> &ImageId {
+        &self.image_id
+    }
+
     pub fn source_image(&self) -> Rc<web_sys::HtmlImageElement> {
         self.source_image.clone()
     }
