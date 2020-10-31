@@ -1,7 +1,10 @@
-pub trait Point<T, U> {
-    fn new(x: U, y: U) -> Self;
-    fn x(&self) -> &U;
-    fn y(&self) -> &U;
+pub trait Point<T>
+where
+    Self: Sized,
+{
+    fn new(x: i64, y: i64) -> Self;
+    fn x(&self) -> &i64;
+    fn y(&self) -> &i64;
 }
 
 #[derive(Clone, Copy, Debug)]
