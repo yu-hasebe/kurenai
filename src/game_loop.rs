@@ -6,7 +6,7 @@ use wasm_bindgen::{prelude::*, JsCast};
 pub struct GameLoop;
 
 impl GameLoop {
-    pub fn run<T: 'static, U: 'static>(game_state: T, canvas: Canvas)
+    pub fn run<T: 'static, U: 'static>(game_state: T, canvas: Canvas) -> Result<(), String>
     where
         T: GameState<U>,
         U: KeyEvent,
@@ -14,7 +14,7 @@ impl GameLoop {
         let game_state_rc = Rc::new(RefCell::new(game_state));
         let canvas_rc = Rc::new(canvas);
         let key_event_rc = Rc::new(RefCell::new(U::new()));
-        U::run(key_event_rc.clone());
+        U::run(key_event_rc.clone())?;
 
         let closure_rc = Rc::new(RefCell::new(None));
         let closure = closure_rc.clone();
@@ -28,6 +28,7 @@ impl GameLoop {
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());
+        Ok(())
     }
 }
 

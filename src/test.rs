@@ -25,7 +25,7 @@ impl TestGameState {
     fn new() -> Self {
         Self {
             _data: 0,
-            _image: Image::new(&[], "gif"),
+            _image: Image::new(&[], "gif").unwrap(),
         }
     }
 }
@@ -69,5 +69,5 @@ fn main() {
         GamePoint::<Dot, i64>::new(480, 480),
         "game-container",
     );
-    GameLoop::run(test_game_state, canvas);
+    GameLoop::run(test_game_state, canvas.unwrap()).unwrap();
 }

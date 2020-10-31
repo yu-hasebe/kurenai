@@ -10,7 +10,7 @@ pub struct Canvas {
 
 impl Canvas {
     /// Create a new Canvas instance and append it to an html_element.
-    pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Self
+    pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
     where
         T: Point<Dot, U>,
         U: NumAssign + ToPrimitive + ToString,
@@ -22,7 +22,7 @@ impl Canvas {
         );
         Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);
-        Self { context }
+        Ok(Self { context })
     }
 
     /// Call this function through Sprite trait. Do not call it directly.
