@@ -2,7 +2,7 @@
 [package]
 name = "kurenai"
 description = "A 2d game engine for web-assembly"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["yu-hasebe <yu.has128@gmail.com>"]
 categories = ["wasm"]
 readme = "README.md"

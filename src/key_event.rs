@@ -3,7 +3,7 @@ use wasm_bindgen::{prelude::*, JsCast};
 
 pub trait KeyEvent {
     fn new() -> Self;
-    fn run(key_event_rc: Rc<RefCell<Self>>);
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String>;
     fn enter(&self) -> bool;
     fn arrow_left(&self) -> bool;
     fn arrow_up(&self) -> bool;
@@ -12,7 +12,7 @@ pub trait KeyEvent {
 }
 
 #[derive(Clone, Debug)]
-pub struct HtmlKeyboardEvent {
+pub struct KeyboardEvent {
     enter: bool,
     arrow_left: bool,
     arrow_up: bool,
@@ -20,7 +20,7 @@ pub struct HtmlKeyboardEvent {
     arrow_down: bool,
 }
 
-impl KeyEvent for HtmlKeyboardEvent {
+impl KeyEvent for KeyboardEvent {
     fn new() -> Self {
         Self {
             enter: false,
@@ -31,7 +31,7 @@ impl KeyEvent for HtmlKeyboardEvent {
         }
     }
 
-    fn run(key_event_rc: Rc<RefCell<Self>>) {
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String> {
         let keydown_event_rc = key_event_rc.clone();
         let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
             keydown_event_rc.borrow_mut().update_on_keydown(event);
@@ -47,6 +47,8 @@ impl KeyEvent for HtmlKeyboardEvent {
 
         keydown_handler.forget();
         keyup_handler.forget();
+
+        Ok(())
     }
 
     fn enter(&self) -> bool {
@@ -70,7 +72,7 @@ impl KeyEvent for HtmlKeyboardEvent {
     }
 }
 
-impl HtmlKeyboardEvent {
+impl KeyboardEvent {
     fn update_on_keydown(&mut self, event: web_sys::KeyboardEvent) {
         match event.key_code() {
             web_sys::KeyEvent::DOM_VK_RETURN => {
