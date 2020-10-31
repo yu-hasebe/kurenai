@@ -3,7 +3,7 @@ use wasm_bindgen::{prelude::*, JsCast};
 
 pub trait KeyEvent {
     fn new() -> Self;
-    fn run(key_event_rc: Rc<RefCell<Self>>);
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String>;
     fn enter(&self) -> bool;
     fn arrow_left(&self) -> bool;
     fn arrow_up(&self) -> bool;
@@ -31,7 +31,7 @@ impl KeyEvent for KeyboardEvent {
         }
     }
 
-    fn run(key_event_rc: Rc<RefCell<Self>>) {
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String> {
         let keydown_event_rc = key_event_rc.clone();
         let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
             keydown_event_rc.borrow_mut().update_on_keydown(event);
@@ -47,6 +47,8 @@ impl KeyEvent for KeyboardEvent {
 
         keydown_handler.forget();
         keyup_handler.forget();
+
+        Ok(())
     }
 
     fn enter(&self) -> bool {
