@@ -48,20 +48,20 @@ where
     pub fn size(&self) -> &T {
         &self.size
     }
-}
 
-// TODO: You need to know its extension from bytes.
-pub fn create_new_html_image_element(
-    bytes: &[u8],
-    extension: &str,
-) -> Result<web_sys::HtmlImageElement, String> {
-    // TODO: Add validation
-    let image = web_sys::HtmlImageElement::new().unwrap();
-    let src = format!(
-        "data:image/{};base64,{}",
-        extension,
-        base64::encode(&bytes.to_vec())
-    );
-    image.set_src(&src);
-    Ok(image)
+    // TODO: You need to know its extension from bytes.
+    pub fn create_new_html_image_element(
+        bytes: &[u8],
+        extension: &str,
+    ) -> Result<web_sys::HtmlImageElement, String> {
+        // TODO: Add validation
+        let image = web_sys::HtmlImageElement::new().unwrap();
+        let src = format!(
+            "data:image/{};base64,{}",
+            extension,
+            base64::encode(&bytes.to_vec())
+        );
+        image.set_src(&src);
+        Ok(image)
+    }
 }
