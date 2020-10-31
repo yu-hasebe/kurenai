@@ -4,7 +4,6 @@ use crate::{
 };
 use num_traits::{NumAssign, ToPrimitive};
 use std::string::ToString;
-use web_sys::HtmlImageElement;
 
 /// You can draw structs that implement Sprite.
 pub trait Sprite<T, U>
@@ -22,7 +21,7 @@ where
         )
     }
 
-    fn image(&self) -> &HtmlImageElement;
+    fn image(&self) -> &web_sys::HtmlImageElement;
     fn begin_dot_on_image(&self) -> T;
     fn size(&self) -> T;
 }
