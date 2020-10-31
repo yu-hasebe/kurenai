@@ -1,5 +1,4 @@
 use crate::point::{Dot, Point};
-use num_traits::{NumAssign, ToPrimitive};
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
@@ -8,34 +7,21 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    /// Create a new Canvas instance and append it to an html_element.
-    pub fn new<T, U>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
+    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
     where
-        T: Point<Dot, U>,
-        U: NumAssign + ToPrimitive,
+        T: Point<Dot>,
     {
         let canvas = Self::create_html_canvas_element(
             canvas_id,
-            canvas_size
-                .x()
-                .to_f64()
-                .ok_or("parse error")?
-                .to_string()
-                .as_str(),
-            canvas_size
-                .y()
-                .to_f64()
-                .ok_or("parse error")?
-                .to_string()
-                .as_str(),
+            canvas_size.x().to_string().as_str(),
+            canvas_size.y().to_string().as_str(),
         );
         Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);
         Ok(Self { context })
     }
 
-    /// Call this function through Sprite trait. Do not call it directly.
-    pub fn draw_image_with_html_image_element<T, U>(
+    pub fn draw_image_with_html_image_element<T>(
         &self,
         image: &web_sys::HtmlImageElement,
         begin_dot_on_image: T,
@@ -44,17 +30,16 @@ impl Canvas {
         size_dot_on_canvas: T,
     ) -> Result<(), String>
     where
-        T: Point<Dot, U>,
-        U: NumAssign + ToPrimitive,
+        T: Point<Dot>,
     {
-        let begin_dot_x_on_image = begin_dot_on_image.x().to_f64().ok_or("parse error")?;
-        let begin_dot_y_on_image = begin_dot_on_image.y().to_f64().ok_or("parse error")?;
-        let size_dot_x_on_image = size_dot_on_image.x().to_f64().ok_or("parse error")?;
-        let size_dot_y_on_image = size_dot_on_image.y().to_f64().ok_or("parse error")?;
-        let begin_dot_x_on_canvas = begin_dot_on_canvas.x().to_f64().ok_or("parse error")?;
-        let begin_dot_y_on_canvas = begin_dot_on_canvas.y().to_f64().ok_or("parse error")?;
-        let size_dot_x_on_canvas = size_dot_on_canvas.x().to_f64().ok_or("parse error")?;
-        let size_dot_y_on_canvas = size_dot_on_canvas.y().to_f64().ok_or("parse error")?;
+        let begin_dot_x_on_image = *begin_dot_on_image.x() as f64;
+        let begin_dot_y_on_image = *begin_dot_on_image.y() as f64;
+        let size_dot_x_on_image = *size_dot_on_image.x() as f64;
+        let size_dot_y_on_image = *size_dot_on_image.y() as f64;
+        let begin_dot_x_on_canvas = *begin_dot_on_canvas.x() as f64;
+        let begin_dot_y_on_canvas = *begin_dot_on_canvas.y() as f64;
+        let size_dot_x_on_canvas = *size_dot_on_canvas.x() as f64;
+        let size_dot_y_on_canvas = *size_dot_on_canvas.y() as f64;
         self.context
             .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
                 image,
