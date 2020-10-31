@@ -1,4 +1,11 @@
-use crate::{canvas::Canvas, game_state::GameState, key_event::KeyEvent};
+use crate::{
+    canvas::Canvas,
+    game_state::GameState,
+    image::image_repository::ImageRepository,
+    key_event::KeyEvent,
+    point::{Dot, Point},
+};
+use num_traits::{NumAssign, ToPrimitive};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
@@ -6,12 +13,19 @@ use wasm_bindgen::{prelude::*, JsCast};
 pub struct GameLoop;
 
 impl GameLoop {
-    pub fn run<T: 'static, U: 'static>(game_state: T, canvas: Canvas) -> Result<(), String>
+    pub fn run<T: 'static, U: 'static, V, W>(
+        game_state: T,
+        image_repository: ImageRepository<V, W>,
+        canvas: Canvas,
+    ) -> Result<(), String>
     where
-        T: GameState<U>,
+        T: GameState<U, V, W>,
         U: KeyEvent,
+        V: Point<Dot, W>,
+        W: NumAssign + ToPrimitive,
     {
         let game_state_rc = Rc::new(RefCell::new(game_state));
+        let image_repository_rc = Rc::new(image_repository);
         let canvas_rc = Rc::new(canvas);
         let key_event_rc = Rc::new(RefCell::new(U::new()));
         U::run(key_event_rc.clone())?;
@@ -21,10 +35,11 @@ impl GameLoop {
         *closure.borrow_mut() = Some(Closure::wrap(Box::new(move || {
             let mut game_state = game_state_rc.borrow_mut();
             let key_event = key_event_rc.borrow();
+            let image_repository = image_repository_rc.clone();
             let canvas = canvas_rc.clone();
             game_state.key_event(&key_event);
             game_state.update();
-            game_state.draw(&canvas);
+            game_state.draw(&image_repository, &canvas);
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());
