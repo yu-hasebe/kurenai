@@ -3,9 +3,7 @@ use crate::{
     image::{image_id::ImageId, image_repository::ImageRepository},
     point::{Dot, Point},
 };
-use num_traits::{NumAssign, ToPrimitive};
-use std::clone::Clone;
-use std::ops::Deref;
+use std::{clone::Clone, ops::Deref};
 
 /// You can draw structs that implement Sprite.
 pub trait Sprite<T>

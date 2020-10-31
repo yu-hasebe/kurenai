@@ -5,7 +5,6 @@ use crate::{
     key_event::KeyEvent,
     point::{Dot, Point},
 };
-use num_traits::{NumAssign, ToPrimitive};
 use std::{cell::RefCell, clone::Clone, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 

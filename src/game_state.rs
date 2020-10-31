@@ -4,7 +4,6 @@ use crate::{
     key_event::KeyEvent,
     point::{Dot, Point},
 };
-use num_traits::{NumAssign, ToPrimitive};
 use std::clone::Clone;
 
 pub trait GameState<T, U>

@@ -2,9 +2,7 @@ use crate::{
     image::{image_id::ImageId, Image},
     point::{Dot, Point},
 };
-use num_traits::{NumAssign, ToPrimitive};
-use std::clone::Clone;
-use std::rc::Rc;
+use std::{clone::Clone, rc::Rc};
 
 #[derive(Clone, Debug)]
 pub struct ImageRepository<T>
