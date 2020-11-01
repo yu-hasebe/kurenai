@@ -10,7 +10,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, String>
+    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, GameError>
     where
         T: Point<Dot>,
     {

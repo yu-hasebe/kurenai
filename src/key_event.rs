@@ -1,9 +1,10 @@
+use crate::game_error::GameError;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
 pub trait KeyEvent {
     fn new() -> Self;
-    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String>;
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), GameError>;
     fn enter(&self) -> bool;
     fn arrow_left(&self) -> bool;
     fn arrow_up(&self) -> bool;
@@ -31,7 +32,7 @@ impl KeyEvent for KeyboardEvent {
         }
     }
 
-    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), String> {
+    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), GameError> {
         let keydown_event_rc = key_event_rc.clone();
         let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
             keydown_event_rc.borrow_mut().update_on_keydown(event);
