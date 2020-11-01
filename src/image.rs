@@ -1,12 +1,14 @@
-use crate::{dot::Dot, game_error::GameError};
+use crate::game_error::GameError;
 use std::{cell::RefCell, clone::Clone, collections::HashMap, ops::Deref, rc::Rc};
 
 #[derive(Clone, Debug)]
 pub struct Image {
     image_id: ImageId,
     source_image: Rc<web_sys::HtmlImageElement>,
-    begin_dot: Dot,
-    size: Dot,
+    begin_dot_x: i64,
+    begin_dot_y: i64,
+    width: i64,
+    height: i64,
 }
 
 impl Image {
@@ -28,14 +30,18 @@ impl Image {
     pub fn new(
         image_id: ImageId,
         source_image: Rc<web_sys::HtmlImageElement>,
-        begin_dot: Dot,
-        size: Dot,
+        begin_dot_x: i64,
+        begin_dot_y: i64,
+        width: i64,
+        height: i64,
     ) -> Self {
         Self {
             image_id,
             source_image,
-            begin_dot,
-            size,
+            begin_dot_x,
+            begin_dot_y,
+            width,
+            height,
         }
     }
 }
@@ -49,12 +55,20 @@ impl Image {
         self.source_image.deref()
     }
 
-    pub fn begin_dot(&self) -> &Dot {
-        &self.begin_dot
+    pub fn begin_dot_x(&self) -> &i64 {
+        &self.begin_dot_x
     }
 
-    pub fn size(&self) -> &Dot {
-        &self.size
+    pub fn begin_dot_y(&self) -> &i64 {
+        &self.begin_dot_y
+    }
+
+    pub fn width(&self) -> &i64 {
+        &self.width
+    }
+
+    pub fn height(&self) -> &i64 {
+        &self.height
     }
 }
 
