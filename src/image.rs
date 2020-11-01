@@ -87,23 +87,14 @@ impl ImageRepository {
         }
     }
 
-    pub fn find(&self, image_id: &ImageId) -> Result<Image, GameError> {
+    pub fn find(&self, image_id: &ImageId) -> Option<Image> {
         match self.store.borrow().get(image_id) {
-            Some(r) => Ok(r.clone()),
-            None => Err(GameError::RepositoryError(format!(
-                "Image with ImageId {:?} is not found in this repository.",
-                *image_id
-            ))),
+            Some(r) => Some(r.clone()),
+            None => None,
         }
     }
-    pub fn save(&self, image: Image) -> Result<(), GameError> {
-        let image_id = *image.image_id();
-        match self.store.borrow_mut().insert(image_id, image) {
-            Some(_) => Err(GameError::RepositoryError(format!(
-                "Image with ImageId {:?} is already saved.",
-                image_id
-            ))),
-            None => Ok(()),
-        }
+
+    pub fn save(&self, image: Image) {
+        self.store.borrow_mut().insert(*image.image_id(), image);
     }
 }

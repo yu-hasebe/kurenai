@@ -40,26 +40,22 @@ fn main() {
         let new_html_image_element_rc =
             Rc::new(Image::create_new_html_image_element(&[], "gif").unwrap());
         let image_repository = ImageRepository::new();
-        image_repository
-            .save(Image::new(
-                ImageId(0),
-                new_html_image_element_rc.clone(),
-                64,
-                32,
-                32,
-                32,
-            ))
-            .unwrap();
-        image_repository
-            .save(Image::new(
-                ImageId(1),
-                new_html_image_element_rc.clone(),
-                64,
-                64,
-                32,
-                32,
-            ))
-            .unwrap();
+        image_repository.save(Image::new(
+            ImageId(0),
+            new_html_image_element_rc.clone(),
+            64,
+            32,
+            32,
+            32,
+        ));
+        image_repository.save(Image::new(
+            ImageId(1),
+            new_html_image_element_rc.clone(),
+            64,
+            64,
+            32,
+            32,
+        ));
         image_repository
     };
 
