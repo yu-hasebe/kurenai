@@ -95,7 +95,7 @@ impl<T> Point<T> for GamePoint<T> {
 #[should_panic]
 fn main() {
     let test_game_state = TestGameState::new();
-    let canvas = Canvas::new("main-canvas", GamePoint::new(480, 480), "game-container");
+    let canvas = Canvas::new("main-canvas", GamePoint::new(480, 480), "game-container").unwrap();
 
     // image_repository factory
     let image_repository = {
@@ -121,5 +121,5 @@ fn main() {
         image_repository
     };
 
-    GameLoop::run(test_game_state, image_repository, canvas.unwrap()).unwrap();
+    GameLoop::run(test_game_state, image_repository, canvas).unwrap();
 }

@@ -1,5 +1,6 @@
 use crate::{
     canvas::Canvas,
+    game_error::GameError,
     game_state::GameState,
     image::image_repository::ImageRepository,
     key_event::KeyEvent,
@@ -16,7 +17,7 @@ impl GameLoop {
         game_state: T,
         image_repository: ImageRepository<V>,
         canvas: Canvas,
-    ) -> Result<(), String>
+    ) -> Result<(), GameError>
     where
         T: GameState<U, V>,
         U: KeyEvent,

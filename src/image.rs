@@ -1,6 +1,9 @@
 pub mod image_id;
 pub mod image_repository;
-use crate::point::{Dot, Point};
+use crate::{
+    game_error::GameError,
+    point::{Dot, Point},
+};
 use image_id::ImageId;
 use std::{clone::Clone, ops::Deref, rc::Rc};
 
@@ -53,7 +56,7 @@ where
     pub fn create_new_html_image_element(
         bytes: &[u8],
         extension: &str,
-    ) -> Result<web_sys::HtmlImageElement, String> {
+    ) -> Result<web_sys::HtmlImageElement, GameError> {
         // TODO: Add validation
         let image = web_sys::HtmlImageElement::new().unwrap();
         let src = format!(
