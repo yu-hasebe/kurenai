@@ -2,18 +2,8 @@ use crate::game_error::GameError;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
 
-pub trait KeyEvent {
-    fn new() -> Self;
-    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), GameError>;
-    fn enter(&self) -> bool;
-    fn arrow_left(&self) -> bool;
-    fn arrow_up(&self) -> bool;
-    fn arrow_right(&self) -> bool;
-    fn arrow_down(&self) -> bool;
-}
-
 #[derive(Clone, Debug)]
-pub struct KeyboardEvent {
+pub struct KeyEvent {
     enter: bool,
     arrow_left: bool,
     arrow_up: bool,
@@ -21,8 +11,8 @@ pub struct KeyboardEvent {
     arrow_down: bool,
 }
 
-impl KeyEvent for KeyboardEvent {
-    fn new() -> Self {
+impl KeyEvent {
+    pub fn new() -> Self {
         Self {
             enter: false,
             arrow_left: false,
@@ -32,7 +22,7 @@ impl KeyEvent for KeyboardEvent {
         }
     }
 
-    fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), GameError> {
+    pub fn run(key_event_rc: Rc<RefCell<Self>>) -> Result<(), GameError> {
         let keydown_event_rc = key_event_rc.clone();
         let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
             keydown_event_rc.borrow_mut().update_on_keydown(event);
@@ -51,29 +41,31 @@ impl KeyEvent for KeyboardEvent {
 
         Ok(())
     }
+}
 
-    fn enter(&self) -> bool {
+impl KeyEvent {
+    pub fn enter(&self) -> bool {
         self.enter
     }
 
-    fn arrow_left(&self) -> bool {
+    pub fn arrow_left(&self) -> bool {
         self.arrow_left
     }
 
-    fn arrow_up(&self) -> bool {
+    pub fn arrow_up(&self) -> bool {
         self.arrow_up
     }
 
-    fn arrow_right(&self) -> bool {
+    pub fn arrow_right(&self) -> bool {
         self.arrow_right
     }
 
-    fn arrow_down(&self) -> bool {
+    pub fn arrow_down(&self) -> bool {
         self.arrow_down
     }
 }
 
-impl KeyboardEvent {
+impl KeyEvent {
     fn update_on_keydown(&mut self, event: web_sys::KeyboardEvent) {
         match event.key_code() {
             web_sys::KeyEvent::DOM_VK_RETURN => {

@@ -1,7 +1,4 @@
-use crate::{
-    game_error::GameError,
-    point::{Dot, Point},
-};
+use crate::game_error::GameError;
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
@@ -10,59 +7,20 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, GameError>
-    where
-        T: Point<Dot>,
-    {
+    pub fn new(
+        canvas_id: &str,
+        canvas_width: i64,
+        canvas_height: i64,
+        id_append_to: &str,
+    ) -> Result<Self, GameError> {
         let canvas = Self::create_html_canvas_element(
             canvas_id,
-            canvas_size.x().to_string().as_str(),
-            canvas_size.y().to_string().as_str(),
+            canvas_width.to_string().as_str(),
+            canvas_height.to_string().as_str(),
         );
         Self::append_html_canvas_element_to(id_append_to, &canvas);
         let context = Self::context(&canvas);
         Ok(Self { context })
-    }
-
-    pub fn draw_image_with_html_image_element<T>(
-        &self,
-        image: &web_sys::HtmlImageElement,
-        begin_dot_on_image: T,
-        size_dot_on_image: T,
-        begin_dot_on_canvas: T,
-        size_dot_on_canvas: T,
-    ) -> Result<(), GameError>
-    where
-        T: Point<Dot>,
-    {
-        match self
-            .context
-            .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
-                image,
-                *begin_dot_on_image.x() as f64,
-                *begin_dot_on_image.y() as f64,
-                *size_dot_on_image.x() as f64,
-                *size_dot_on_image.y() as f64,
-                *begin_dot_on_canvas.x() as f64,
-                *begin_dot_on_canvas.y() as f64,
-                *size_dot_on_canvas.x() as f64,
-                *size_dot_on_canvas.y() as f64,
-            ) {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e.into()),
-        }
-    }
-
-    pub fn clear_rect<T>(&self, begin_dot_on_canvas: T, size: T)
-    where
-        T: Point<Dot>,
-    {
-        self.context.clear_rect(
-            *begin_dot_on_canvas.x() as f64,
-            *begin_dot_on_canvas.y() as f64,
-            *size.x() as f64,
-            *size.y() as f64,
-        )
     }
 }
 
