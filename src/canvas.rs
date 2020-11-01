@@ -35,32 +35,38 @@ impl Canvas {
     where
         T: Point<Dot>,
     {
-        let begin_dot_x_on_image = *begin_dot_on_image.x() as f64;
-        let begin_dot_y_on_image = *begin_dot_on_image.y() as f64;
-        let size_dot_x_on_image = *size_dot_on_image.x() as f64;
-        let size_dot_y_on_image = *size_dot_on_image.y() as f64;
-        let begin_dot_x_on_canvas = *begin_dot_on_canvas.x() as f64;
-        let begin_dot_y_on_canvas = *begin_dot_on_canvas.y() as f64;
-        let size_dot_x_on_canvas = *size_dot_on_canvas.x() as f64;
-        let size_dot_y_on_canvas = *size_dot_on_canvas.y() as f64;
         match self
             .context
             .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
                 image,
-                begin_dot_x_on_image,
-                begin_dot_y_on_image,
-                size_dot_x_on_image,
-                size_dot_y_on_image,
-                begin_dot_x_on_canvas,
-                begin_dot_y_on_canvas,
-                size_dot_x_on_canvas,
-                size_dot_y_on_canvas,
+                *begin_dot_on_image.x() as f64,
+                *begin_dot_on_image.y() as f64,
+                *size_dot_on_image.x() as f64,
+                *size_dot_on_image.y() as f64,
+                *begin_dot_on_canvas.x() as f64,
+                *begin_dot_on_canvas.y() as f64,
+                *size_dot_on_canvas.x() as f64,
+                *size_dot_on_canvas.y() as f64,
             ) {
             Ok(_) => Ok(()),
             Err(e) => Err(e.into()),
         }
     }
 
+    pub fn clear_rect<T>(&self, begin_dot_on_canvas: T, size: T)
+    where
+        T: Point<Dot>,
+    {
+        self.context.clear_rect(
+            *begin_dot_on_canvas.x() as f64,
+            *begin_dot_on_canvas.y() as f64,
+            *size.x() as f64,
+            *size.y() as f64,
+        )
+    }
+}
+
+impl Canvas {
     fn create_html_canvas_element(
         id: &str,
         width: &str,
