@@ -10,20 +10,9 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(
-        id: CanvasId,
-        canvas_id: &str,
-        canvas_width: i64,
-        canvas_height: i64,
-        id_append_to: &str,
-    ) -> Result<Self, GameError> {
-        let canvas = Self::create_html_canvas_element(
-            canvas_id,
-            canvas_width.to_string().as_str(),
-            canvas_height.to_string().as_str(),
-        );
-        Self::append_html_canvas_element_to(id_append_to, &canvas);
-        let context = Self::context_(&canvas);
+    pub fn new(id: CanvasId) -> Result<Self, GameError> {
+        let canvas = Self::get_canvas_element_by_id(id.0.as_str());
+        let context = Self::get_context(&canvas);
         Ok(Self { id, context })
     }
 }
@@ -39,38 +28,18 @@ impl Canvas {
 }
 
 impl Canvas {
-    fn create_html_canvas_element(
-        id: &str,
-        width: &str,
-        height: &str,
-    ) -> web_sys::HtmlCanvasElement {
-        let canvas = web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .create_element("canvas")
-            .unwrap();
-        canvas.set_attribute("id", id).unwrap();
-        canvas.set_attribute("width", width).unwrap();
-        canvas.set_attribute("height", height).unwrap();
-        canvas
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .map_err(|_| ())
-            .unwrap()
-    }
-
-    fn append_html_canvas_element_to(id: &str, canvas: &web_sys::HtmlCanvasElement) {
+    fn get_canvas_element_by_id(id: &str) -> web_sys::HtmlCanvasElement {
         web_sys::window()
             .unwrap()
             .document()
             .unwrap()
             .get_element_by_id(id)
             .unwrap()
-            .append_child(canvas)
-            .unwrap();
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .unwrap()
     }
 
-    fn context_(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
+    fn get_context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
         canvas
             .get_context("2d")
             .unwrap()
@@ -80,8 +49,8 @@ impl Canvas {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub struct CanvasId(pub usize);
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct CanvasId(pub String);
 
 #[derive(Clone, Debug)]
 pub struct CanvasRepository {
@@ -103,6 +72,6 @@ impl CanvasRepository {
     }
 
     pub fn save(&self, canvas: Canvas) {
-        self.store.borrow_mut().insert(*canvas.id(), canvas);
+        self.store.borrow_mut().insert(canvas.id().clone(), canvas);
     }
 }

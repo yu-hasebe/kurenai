@@ -60,8 +60,7 @@ fn main() {
     // canvas_repository factory
     let canvas_repository = {
         let canvas_repository = CanvasRepository::new();
-        canvas_repository
-            .save(Canvas::new(CanvasId(0), "canvas-main", 480, 480, "game-container").unwrap());
+        canvas_repository.save(Canvas::new(CanvasId("main-canvas".to_string())).unwrap());
         canvas_repository
     };
 
