@@ -1,4 +1,7 @@
-use crate::point::{Dot, Point};
+use crate::{
+    game_error::GameError,
+    point::{Dot, Point},
+};
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
@@ -28,7 +31,7 @@ impl Canvas {
         size_dot_on_image: T,
         begin_dot_on_canvas: T,
         size_dot_on_canvas: T,
-    ) -> Result<(), String>
+    ) -> Result<(), GameError>
     where
         T: Point<Dot>,
     {
@@ -40,7 +43,8 @@ impl Canvas {
         let begin_dot_y_on_canvas = *begin_dot_on_canvas.y() as f64;
         let size_dot_x_on_canvas = *size_dot_on_canvas.x() as f64;
         let size_dot_y_on_canvas = *size_dot_on_canvas.y() as f64;
-        self.context
+        match self
+            .context
             .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
                 image,
                 begin_dot_x_on_image,
@@ -51,10 +55,10 @@ impl Canvas {
                 begin_dot_y_on_canvas,
                 size_dot_x_on_canvas,
                 size_dot_y_on_canvas,
-            )
-            .unwrap();
-        // TODO: Convert wasm_bindgen::JsValue to String in Result
-        Ok(())
+            ) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(e.into()),
+        }
     }
 
     fn create_html_canvas_element(

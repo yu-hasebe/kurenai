@@ -1,4 +1,5 @@
 pub mod canvas;
+pub mod game_error;
 pub mod game_loop;
 pub mod game_state;
 pub mod image;

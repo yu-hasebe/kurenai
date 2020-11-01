@@ -1,4 +1,5 @@
 use crate::{
+    game_error::GameError,
     image::{image_id::ImageId, Image},
     point::{Dot, Point},
 };
@@ -21,15 +22,22 @@ where
             store: Rc::new(RefCell::new(HashMap::new())),
         }
     }
-    pub fn find(&self, image_id: &ImageId) -> Result<Image<T>, String> {
+    pub fn find(&self, image_id: &ImageId) -> Result<Image<T>, GameError> {
         match self.store.borrow().get(image_id) {
             Some(r) => Ok(r.clone()),
-            None => Err("Not found in ImageRepository".to_string()),
+            None => Err(GameError::RepositoryError(format!(
+                "Image with ImageId {:?} is not found in this repository.",
+                *image_id
+            ))),
         }
     }
-    pub fn save(&self, image: Image<T>) -> Result<(), String> {
-        match self.store.borrow_mut().insert(*image.image_id(), image) {
-            Some(_) => Err("Already inserted in ImageRepository".to_string()),
+    pub fn save(&self, image: Image<T>) -> Result<(), GameError> {
+        let image_id = *image.image_id();
+        match self.store.borrow_mut().insert(image_id, image) {
+            Some(_) => Err(GameError::RepositoryError(format!(
+                "Image with ImageId {:?} is already saved.",
+                image_id
+            ))),
             None => Ok(()),
         }
     }
