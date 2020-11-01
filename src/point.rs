@@ -7,5 +7,5 @@ where
     fn y(&self) -> &i64;
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Dot {}
