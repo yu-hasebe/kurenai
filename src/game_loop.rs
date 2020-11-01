@@ -1,5 +1,5 @@
 use crate::{
-    canvas::Canvas, game_error::GameError, image::ImageRepository, key_event::KeyEvent,
+    canvas::CanvasRepository, game_error::GameError, image::ImageRepository, key_event::KeyEvent,
     traits::game_service::GameService,
 };
 use std::{cell::RefCell, clone::Clone, rc::Rc};
@@ -12,14 +12,14 @@ impl GameLoop {
     pub fn run<T: 'static>(
         game_service: T,
         image_repository: ImageRepository,
-        canvas: Canvas,
+        canvas_repositorry: CanvasRepository,
     ) -> Result<(), GameError>
     where
         T: GameService,
     {
         let game_service_rc = Rc::new(game_service);
         let image_repository_rc = Rc::new(image_repository);
-        let canvas_rc = Rc::new(canvas);
+        let canvas_repositorry_rc = Rc::new(canvas_repositorry);
         let key_event_rc = Rc::new(RefCell::new(KeyEvent::new()));
         KeyEvent::run(key_event_rc.clone())?;
 
@@ -29,10 +29,10 @@ impl GameLoop {
             let game_service = game_service_rc.clone();
             let key_event = key_event_rc.borrow();
             let image_repository = image_repository_rc.clone();
-            let canvas = canvas_rc.clone();
+            let canvas_repositorry = canvas_repositorry_rc.clone();
             game_service.key_event(&key_event);
             game_service.update();
-            game_service.draw(&image_repository, &canvas);
+            game_service.draw(&image_repository, &canvas_repositorry);
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());

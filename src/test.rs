@@ -1,5 +1,5 @@
 use crate::{
-    canvas::Canvas,
+    canvas::{Canvas, CanvasId, CanvasRepository},
     game_loop::GameLoop,
     image::{Image, ImageId, ImageRepository},
     key_event::KeyEvent,
@@ -18,7 +18,7 @@ impl GameService for TestGameService {
     fn update(&self) {
         // Update data
     }
-    fn draw(&self, image_repository: &ImageRepository, canvas: &Canvas) {
+    fn draw(&self, image_repository: &ImageRepository, canvas_repository: &CanvasRepository) {
         // Draw
     }
 }
@@ -33,8 +33,6 @@ impl TestGameService {
 #[should_panic]
 fn main() {
     let test_game_service = TestGameService::new();
-    let canvas = Canvas::new("main-canvas", 480, 480, "game-container").unwrap();
-
     // image_repository factory
     let image_repository = {
         let new_html_image_element_rc =
@@ -59,5 +57,13 @@ fn main() {
         image_repository
     };
 
-    GameLoop::run(test_game_service, image_repository, canvas).unwrap();
+    // canvas_repository factory
+    let canvas_repository = {
+        let canvas_repository = CanvasRepository::new();
+        canvas_repository
+            .save(Canvas::new(CanvasId(0), "canvas-main", 480, 480, "game-container").unwrap());
+        canvas_repository
+    };
+
+    GameLoop::run(test_game_service, image_repository, canvas_repository).unwrap();
 }

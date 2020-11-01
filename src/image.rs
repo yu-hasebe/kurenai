@@ -3,7 +3,7 @@ use std::{cell::RefCell, clone::Clone, collections::HashMap, ops::Deref, rc::Rc}
 
 #[derive(Clone, Debug)]
 pub struct Image {
-    image_id: ImageId,
+    id: ImageId,
     source_image: Rc<web_sys::HtmlImageElement>,
     begin_dot_x: i64,
     begin_dot_y: i64,
@@ -28,7 +28,7 @@ impl Image {
     }
 
     pub fn new(
-        image_id: ImageId,
+        id: ImageId,
         source_image: Rc<web_sys::HtmlImageElement>,
         begin_dot_x: i64,
         begin_dot_y: i64,
@@ -36,7 +36,7 @@ impl Image {
         height: i64,
     ) -> Self {
         Self {
-            image_id,
+            id,
             source_image,
             begin_dot_x,
             begin_dot_y,
@@ -47,8 +47,8 @@ impl Image {
 }
 
 impl Image {
-    pub fn image_id(&self) -> &ImageId {
-        &self.image_id
+    pub fn id(&self) -> &ImageId {
+        &self.id
     }
 
     pub fn source_image(&self) -> &web_sys::HtmlImageElement {
@@ -95,6 +95,6 @@ impl ImageRepository {
     }
 
     pub fn save(&self, image: Image) {
-        self.store.borrow_mut().insert(*image.image_id(), image);
+        self.store.borrow_mut().insert(*image.id(), image);
     }
 }
