@@ -1,10 +1,6 @@
 use crate::{
-    canvas::Canvas,
-    game_error::GameError,
-    game_state::GameState,
-    image::image_repository::ImageRepository,
-    key_event::KeyEvent,
-    point::{Dot, Point},
+    canvas::CanvasRepository, game_error::GameError, image::ImageRepository, key_event::KeyEvent,
+    traits::game_service::GameService,
 };
 use std::{cell::RefCell, clone::Clone, rc::Rc};
 use wasm_bindgen::{prelude::*, JsCast};
@@ -13,32 +9,30 @@ use wasm_bindgen::{prelude::*, JsCast};
 pub struct GameLoop;
 
 impl GameLoop {
-    pub fn run<T: 'static, U: 'static, V: 'static>(
-        game_state: T,
-        image_repository: ImageRepository<V>,
-        canvas: Canvas,
+    pub fn run<T: 'static>(
+        game_service: T,
+        image_repository: ImageRepository,
+        canvas_repositorry: CanvasRepository,
     ) -> Result<(), GameError>
     where
-        T: GameState<U, V>,
-        U: KeyEvent,
-        V: Clone + Point<Dot>,
+        T: GameService,
     {
-        let game_state_rc = Rc::new(RefCell::new(game_state));
+        let game_service_rc = Rc::new(game_service);
         let image_repository_rc = Rc::new(image_repository);
-        let canvas_rc = Rc::new(canvas);
-        let key_event_rc = Rc::new(RefCell::new(U::new()));
-        U::run(key_event_rc.clone())?;
+        let canvas_repositorry_rc = Rc::new(canvas_repositorry);
+        let key_event_rc = Rc::new(RefCell::new(KeyEvent::new()));
+        KeyEvent::run(key_event_rc.clone())?;
 
         let closure_rc = Rc::new(RefCell::new(None));
         let closure = closure_rc.clone();
         *closure.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-            let mut game_state = game_state_rc.borrow_mut();
+            let game_service = game_service_rc.clone();
             let key_event = key_event_rc.borrow();
             let image_repository = image_repository_rc.clone();
-            let canvas = canvas_rc.clone();
-            game_state.key_event(&key_event);
-            game_state.update();
-            game_state.draw(&image_repository, &canvas);
+            let canvas_repositorry = canvas_repositorry_rc.clone();
+            game_service.key_event(&key_event);
+            game_service.update();
+            game_service.draw(&image_repository, &canvas_repositorry);
             Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
         }) as Box<dyn FnMut()>));
         Self::request_animation_frame(closure.borrow().as_ref().unwrap());

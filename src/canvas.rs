@@ -1,109 +1,100 @@
-use crate::{
-    game_error::GameError,
-    point::{Dot, Point},
-};
+use crate::game_error::GameError;
+use std::collections::HashMap;
+use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug)]
 pub struct Canvas {
+    id: CanvasId,
     context: web_sys::CanvasRenderingContext2d,
 }
 
 impl Canvas {
-    pub fn new<T>(canvas_id: &str, canvas_size: T, id_append_to: &str) -> Result<Self, GameError>
-    where
-        T: Point<Dot>,
-    {
-        let canvas = Self::create_html_canvas_element(
-            canvas_id,
-            canvas_size.x().to_string().as_str(),
-            canvas_size.y().to_string().as_str(),
-        );
-        Self::append_html_canvas_element_to(id_append_to, &canvas);
-        let context = Self::context(&canvas);
-        Ok(Self { context })
-    }
-
-    pub fn draw_image_with_html_image_element<T>(
-        &self,
-        image: &web_sys::HtmlImageElement,
-        begin_dot_on_image: T,
-        size_dot_on_image: T,
-        begin_dot_on_canvas: T,
-        size_dot_on_canvas: T,
-    ) -> Result<(), GameError>
-    where
-        T: Point<Dot>,
-    {
-        match self
-            .context
-            .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
-                image,
-                *begin_dot_on_image.x() as f64,
-                *begin_dot_on_image.y() as f64,
-                *size_dot_on_image.x() as f64,
-                *size_dot_on_image.y() as f64,
-                *begin_dot_on_canvas.x() as f64,
-                *begin_dot_on_canvas.y() as f64,
-                *size_dot_on_canvas.x() as f64,
-                *size_dot_on_canvas.y() as f64,
-            ) {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e.into()),
-        }
-    }
-
-    pub fn clear_rect<T>(&self, begin_dot_on_canvas: T, size: T)
-    where
-        T: Point<Dot>,
-    {
-        self.context.clear_rect(
-            *begin_dot_on_canvas.x() as f64,
-            *begin_dot_on_canvas.y() as f64,
-            *size.x() as f64,
-            *size.y() as f64,
-        )
-    }
-}
-
-impl Canvas {
-    fn create_html_canvas_element(
-        id: &str,
-        width: &str,
-        height: &str,
-    ) -> web_sys::HtmlCanvasElement {
+    pub fn create_new_html_canvas_element(
+        width: i64,
+        height: i64,
+    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
         let canvas = web_sys::window()
             .unwrap()
             .document()
             .unwrap()
             .create_element("canvas")
             .unwrap();
-        canvas.set_attribute("id", id).unwrap();
-        canvas.set_attribute("width", width).unwrap();
-        canvas.set_attribute("height", height).unwrap();
         canvas
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .map_err(|_| ())
-            .unwrap()
+            .set_attribute("width", width.to_string().as_str())
+            .unwrap();
+        canvas
+            .set_attribute("height", height.to_string().as_str())
+            .unwrap();
+        Ok(canvas.dyn_into::<web_sys::HtmlCanvasElement>().unwrap())
     }
 
-    fn append_html_canvas_element_to(id: &str, canvas: &web_sys::HtmlCanvasElement) {
-        web_sys::window()
+    pub fn get_html_canvas_element_by_id(
+        id: &str,
+    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
+        Ok(web_sys::window()
             .unwrap()
             .document()
             .unwrap()
             .get_element_by_id(id)
             .unwrap()
-            .append_child(canvas)
-            .unwrap();
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .unwrap())
     }
 
-    fn context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
+    pub fn new(
+        id: CanvasId,
+        html_canvas_element: web_sys::HtmlCanvasElement,
+    ) -> Result<Self, GameError> {
+        let context = Self::get_context(&html_canvas_element);
+        Ok(Self { id, context })
+    }
+}
+
+impl Canvas {
+    pub fn id(&self) -> &CanvasId {
+        &self.id
+    }
+
+    pub fn context(&self) -> &web_sys::CanvasRenderingContext2d {
+        &self.context
+    }
+}
+
+impl Canvas {
+    fn get_context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
         canvas
             .get_context("2d")
             .unwrap()
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap()
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct CanvasId(pub usize);
+
+#[derive(Clone, Debug)]
+pub struct CanvasRepository {
+    store: Rc<RefCell<HashMap<CanvasId, Canvas>>>,
+}
+
+impl CanvasRepository {
+    pub fn new() -> Self {
+        Self {
+            store: Rc::new(RefCell::new(HashMap::new())),
+        }
+    }
+
+    pub fn find(&self, canvas_id: &CanvasId) -> Option<Canvas> {
+        match self.store.borrow().get(canvas_id) {
+            Some(r) => Some(r.clone()),
+            None => None,
+        }
+    }
+
+    pub fn save(&self, canvas: Canvas) {
+        self.store.borrow_mut().insert(*canvas.id(), canvas);
     }
 }
