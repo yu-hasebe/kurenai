@@ -10,8 +10,8 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(id: CanvasId) -> Result<Self, GameError> {
-        let canvas = Self::get_canvas_element_by_id(id.0.as_str());
+    pub fn new(id: CanvasId, html_canvas_element_id: &str) -> Result<Self, GameError> {
+        let canvas = Self::get_canvas_element_by_id(html_canvas_element_id);
         let context = Self::get_context(&canvas);
         Ok(Self { id, context })
     }
@@ -49,8 +49,8 @@ impl Canvas {
     }
 }
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub struct CanvasId(pub String);
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct CanvasId(pub usize);
 
 #[derive(Clone, Debug)]
 pub struct CanvasRepository {
@@ -72,6 +72,6 @@ impl CanvasRepository {
     }
 
     pub fn save(&self, canvas: Canvas) {
-        self.store.borrow_mut().insert(canvas.id().clone(), canvas);
+        self.store.borrow_mut().insert(*canvas.id(), canvas);
     }
 }

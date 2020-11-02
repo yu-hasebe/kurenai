@@ -33,6 +33,7 @@ impl TestGameService {
 #[should_panic]
 fn main() {
     let test_game_service = TestGameService::new();
+
     // image_repository factory
     let image_repository = {
         let new_html_image_element_rc =
@@ -60,7 +61,7 @@ fn main() {
     // canvas_repository factory
     let canvas_repository = {
         let canvas_repository = CanvasRepository::new();
-        canvas_repository.save(Canvas::new(CanvasId("main-canvas".to_string())).unwrap());
+        canvas_repository.save(Canvas::new(CanvasId(0), "main-canvas").unwrap());
         canvas_repository
     };
 
