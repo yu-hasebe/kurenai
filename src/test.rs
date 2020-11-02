@@ -60,8 +60,9 @@ fn main() {
 
     // canvas_repository factory
     let canvas_repository = {
+        let new_html_canvas_element = Canvas::get_html_canvas_element_by_id("main-canvas").unwrap();
         let canvas_repository = CanvasRepository::new();
-        canvas_repository.save(Canvas::new(CanvasId(0), "main-canvas").unwrap());
+        canvas_repository.save(Canvas::new(CanvasId(0), new_html_canvas_element).unwrap());
         canvas_repository
     };
 

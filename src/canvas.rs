@@ -10,9 +10,43 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(id: CanvasId, html_canvas_element_id: &str) -> Result<Self, GameError> {
-        let canvas = Self::get_canvas_element_by_id(html_canvas_element_id);
-        let context = Self::get_context(&canvas);
+    pub fn create_new_html_canvas_element(
+        width: i64,
+        height: i64,
+    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
+        let canvas = web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .create_element("canvas")
+            .unwrap();
+        canvas
+            .set_attribute("width", width.to_string().as_str())
+            .unwrap();
+        canvas
+            .set_attribute("height", height.to_string().as_str())
+            .unwrap();
+        Ok(canvas.dyn_into::<web_sys::HtmlCanvasElement>().unwrap())
+    }
+
+    pub fn get_html_canvas_element_by_id(
+        id: &str,
+    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
+        Ok(web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .get_element_by_id(id)
+            .unwrap()
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .unwrap())
+    }
+
+    pub fn new(
+        id: CanvasId,
+        html_canvas_element: web_sys::HtmlCanvasElement,
+    ) -> Result<Self, GameError> {
+        let context = Self::get_context(&html_canvas_element);
         Ok(Self { id, context })
     }
 }
@@ -28,17 +62,6 @@ impl Canvas {
 }
 
 impl Canvas {
-    fn get_canvas_element_by_id(id: &str) -> web_sys::HtmlCanvasElement {
-        web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .get_element_by_id(id)
-            .unwrap()
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .unwrap()
-    }
-
     fn get_context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
         canvas
             .get_context("2d")

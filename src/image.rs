@@ -4,7 +4,7 @@ use std::{cell::RefCell, clone::Clone, collections::HashMap, ops::Deref, rc::Rc}
 #[derive(Clone, Debug)]
 pub struct Image {
     id: ImageId,
-    source_image: Rc<web_sys::HtmlImageElement>,
+    html_image_element: Rc<web_sys::HtmlImageElement>,
     begin_dot_x: i64,
     begin_dot_y: i64,
     width: i64,
@@ -29,7 +29,7 @@ impl Image {
 
     pub fn new(
         id: ImageId,
-        source_image: Rc<web_sys::HtmlImageElement>,
+        html_image_element: Rc<web_sys::HtmlImageElement>,
         begin_dot_x: i64,
         begin_dot_y: i64,
         width: i64,
@@ -37,7 +37,7 @@ impl Image {
     ) -> Self {
         Self {
             id,
-            source_image,
+            html_image_element,
             begin_dot_x,
             begin_dot_y,
             width,
@@ -51,8 +51,8 @@ impl Image {
         &self.id
     }
 
-    pub fn source_image(&self) -> &web_sys::HtmlImageElement {
-        self.source_image.deref()
+    pub fn html_image_element(&self) -> &web_sys::HtmlImageElement {
+        self.html_image_element.deref()
     }
 
     pub fn begin_dot_x(&self) -> &i64 {
