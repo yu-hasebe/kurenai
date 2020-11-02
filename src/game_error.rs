@@ -3,7 +3,6 @@ use wasm_bindgen::JsValue;
 #[derive(Clone, Debug)]
 pub enum GameError {
     JsError(JsValue),
-    RepositoryError(String),
 }
 
 impl From<JsValue> for GameError {
