@@ -19,4 +19,4 @@ jobs:
     - name: Build
       run: rustup target add wasm32-unknown-unknown & cargo build --verbose --target wasm32-unknown-unknown
     - name: Run tests
-      run: cargo test --target wasm32-unknown-unknown
+      run: cargo install wasm-bindgen-cli --vers "0.2.45" & rustup target add wasm32-unknown-unknown & cargo test --target wasm32-unknown-unknown
