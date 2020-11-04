@@ -1,7 +1,7 @@
 # You must change these to your own details.
 [package]
 name = "kurenai"
-description = "A 2d game engine for web-assembly"
+description = "A 2d game engine based on wasm"
 version = "0.4.0"
 authors = ["yu-hasebe <yu.has128@gmail.com>"]
 categories = ["wasm"]
@@ -34,3 +34,6 @@ features = [
   "KeyEvent",
   "Window",
 ]
+
+[dev-dependencies]
+wasm-bindgen-test = "0.2.45"

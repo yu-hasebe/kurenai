@@ -1,8 +1,3 @@
-pub mod canvas;
-pub mod game_error;
 pub mod game_loop;
-pub mod image;
+pub mod game_service;
 pub mod key_event;
-#[cfg(test)]
-mod test;
-pub mod traits;
