@@ -1,50 +1,52 @@
-use crate::{
-    canvas::CanvasRepository, game_error::GameError, image::ImageRepository, key_event::KeyEvent,
-    traits::game_service::GameService,
-};
-use std::{cell::RefCell, clone::Clone, rc::Rc};
+use crate::game_service::GameService;
+use crate::key_event::KeyEvent;
+
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use wasm_bindgen::{prelude::*, JsCast};
 
 #[derive(Clone, Debug)]
 pub struct GameLoop;
 
 impl GameLoop {
-    pub fn run<T: 'static>(
-        game_service: T,
-        image_repository: ImageRepository,
-        canvas_repositorry: CanvasRepository,
-    ) -> Result<(), GameError>
+    pub fn run<T: 'static>(game_service: T)
     where
         T: GameService,
     {
         let game_service_rc = Rc::new(game_service);
-        let image_repository_rc = Rc::new(image_repository);
-        let canvas_repositorry_rc = Rc::new(canvas_repositorry);
         let key_event_rc = Rc::new(RefCell::new(KeyEvent::new()));
-        KeyEvent::run(key_event_rc.clone())?;
+        KeyEvent::run(key_event_rc.clone());
 
-        let closure_rc = Rc::new(RefCell::new(None));
-        let closure = closure_rc.clone();
-        *closure.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+        let callback_rc = Rc::new(RefCell::new(None));
+        let callback = callback_rc.clone();
+        *callback.borrow_mut() = Some(Closure::wrap(Box::new(move || {
             let game_service = game_service_rc.clone();
             let key_event = key_event_rc.borrow();
-            let image_repository = image_repository_rc.clone();
-            let canvas_repositorry = canvas_repositorry_rc.clone();
             game_service.key_event(&key_event);
             game_service.update();
-            game_service.draw(&image_repository, &canvas_repositorry);
-            Self::request_animation_frame(closure_rc.borrow().as_ref().unwrap());
+            game_service.draw();
+            Self::request_animation_frame(
+                callback_rc
+                    .borrow()
+                    .as_ref()
+                    .expect("No Closure in this callback"),
+            );
         }) as Box<dyn FnMut()>));
-        Self::request_animation_frame(closure.borrow().as_ref().unwrap());
-        Ok(())
+        Self::request_animation_frame(
+            callback
+                .borrow()
+                .as_ref()
+                .expect("No Closure in this callback"),
+        );
     }
 }
 
 impl GameLoop {
     fn request_animation_frame(f: &Closure<dyn FnMut()>) {
         web_sys::window()
-            .unwrap()
+            .expect("No global window")
             .request_animation_frame(f.as_ref().unchecked_ref())
-            .unwrap();
+            .expect("Failed to call requestAnimationFrame");
     }
 }
