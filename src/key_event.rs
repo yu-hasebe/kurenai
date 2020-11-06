@@ -3,7 +3,8 @@ use std::rc::Rc;
 
 use wasm_bindgen::{prelude::*, JsCast};
 
-#[derive(Clone, Debug)]
+/// This struct shows which key is down and which is up.
+#[derive(Clone, Copy, Debug)]
 pub struct KeyEvent {
     enter: bool,
     arrow_left: bool,
@@ -13,6 +14,7 @@ pub struct KeyEvent {
 }
 
 impl KeyEvent {
+    /// This function creates a new instance. Pass it to KeyEvent::run().
     pub fn new() -> Self {
         Self {
             enter: false,
@@ -23,6 +25,7 @@ impl KeyEvent {
         }
     }
 
+    /// This function calls add_event_listener_with_callback() and starts to serve KeyEvent.
     pub fn run(key_event_rc: Rc<RefCell<Self>>) {
         let keydown_event_rc = key_event_rc.clone();
         let keydown_handler = Closure::wrap(Box::new(move |event: web_sys::KeyboardEvent| {
@@ -43,22 +46,27 @@ impl KeyEvent {
 }
 
 impl KeyEvent {
+    /// If the Enter key is down(up), this function returns true(false).
     pub fn enter(&self) -> bool {
         self.enter
     }
 
+    /// If the ArrowLeft key is down(up), this function returns true(false).
     pub fn arrow_left(&self) -> bool {
         self.arrow_left
     }
 
+    /// If the ArrowUp key is down(up), this function returns true(false).
     pub fn arrow_up(&self) -> bool {
         self.arrow_up
     }
 
+    /// If the ArrowRight key is down(up), this function returns true(false).
     pub fn arrow_right(&self) -> bool {
         self.arrow_right
     }
 
+    /// If the ArrowDown key is down(up), this function returns true(false).
     pub fn arrow_down(&self) -> bool {
         self.arrow_down
     }
