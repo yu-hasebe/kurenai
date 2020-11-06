@@ -16,7 +16,7 @@ impl GameService for TestGameService {
     fn update(&self) {
         // Update data
     }
-    fn draw(&self, context: &web_sys::CanvasRenderingContext2d) {
+    fn draw(&self, _context: &web_sys::CanvasRenderingContext2d) {
         // Draw
     }
 }
