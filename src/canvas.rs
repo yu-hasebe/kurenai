@@ -1,100 +1,29 @@
-use crate::game_error::GameError;
-use std::collections::HashMap;
-use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::JsCast;
 
-#[derive(Clone, Debug)]
-pub struct Canvas {
-    id: CanvasId,
-    context: web_sys::CanvasRenderingContext2d,
+/// This function crates a CanvasRenderingContext2D, from which you can draw images on the canvas.
+pub fn get_canvas_rendering_context_2d(canvas_id: &str) -> web_sys::CanvasRenderingContext2d {
+    let canvas = get_html_canvas_element_by_id(canvas_id);
+    get_canvas_rendering_context_2d_from_html_canvas_element(&canvas)
 }
 
-impl Canvas {
-    pub fn create_new_html_canvas_element(
-        width: i64,
-        height: i64,
-    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
-        let canvas = web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .create_element("canvas")
-            .unwrap();
-        canvas
-            .set_attribute("width", width.to_string().as_str())
-            .unwrap();
-        canvas
-            .set_attribute("height", height.to_string().as_str())
-            .unwrap();
-        Ok(canvas.dyn_into::<web_sys::HtmlCanvasElement>().unwrap())
-    }
-
-    pub fn get_html_canvas_element_by_id(
-        id: &str,
-    ) -> Result<web_sys::HtmlCanvasElement, GameError> {
-        Ok(web_sys::window()
-            .unwrap()
-            .document()
-            .unwrap()
-            .get_element_by_id(id)
-            .unwrap()
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .unwrap())
-    }
-
-    pub fn new(
-        id: CanvasId,
-        html_canvas_element: web_sys::HtmlCanvasElement,
-    ) -> Result<Self, GameError> {
-        let context = Self::get_context(&html_canvas_element);
-        Ok(Self { id, context })
-    }
+fn get_html_canvas_element_by_id(id: &str) -> web_sys::HtmlCanvasElement {
+    web_sys::window()
+        .expect("No global window.")
+        .document()
+        .expect("The window should have document.")
+        .get_element_by_id(id)
+        .expect(format!("The document has no element with id {}.", id).as_str())
+        .dyn_into::<web_sys::HtmlCanvasElement>()
+        .expect("The element with id {} should be a HTMLCanvasElement.")
 }
 
-impl Canvas {
-    pub fn id(&self) -> &CanvasId {
-        &self.id
-    }
-
-    pub fn context(&self) -> &web_sys::CanvasRenderingContext2d {
-        &self.context
-    }
-}
-
-impl Canvas {
-    fn get_context(canvas: &web_sys::HtmlCanvasElement) -> web_sys::CanvasRenderingContext2d {
-        canvas
-            .get_context("2d")
-            .unwrap()
-            .unwrap()
-            .dyn_into::<web_sys::CanvasRenderingContext2d>()
-            .unwrap()
-    }
-}
-
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub struct CanvasId(pub usize);
-
-#[derive(Clone, Debug)]
-pub struct CanvasRepository {
-    store: Rc<RefCell<HashMap<CanvasId, Canvas>>>,
-}
-
-impl CanvasRepository {
-    pub fn new() -> Self {
-        Self {
-            store: Rc::new(RefCell::new(HashMap::new())),
-        }
-    }
-
-    pub fn find(&self, canvas_id: &CanvasId) -> Option<Canvas> {
-        match self.store.borrow().get(canvas_id) {
-            Some(r) => Some(r.clone()),
-            None => None,
-        }
-    }
-
-    pub fn save(&self, canvas: Canvas) {
-        self.store.borrow_mut().insert(*canvas.id(), canvas);
-    }
+fn get_canvas_rendering_context_2d_from_html_canvas_element(
+    canvas: &web_sys::HtmlCanvasElement,
+) -> web_sys::CanvasRenderingContext2d {
+    canvas
+        .get_context("2d")
+        .expect("Failed to create a Context.")
+        .expect("No Context.")
+        .dyn_into::<web_sys::CanvasRenderingContext2d>()
+        .expect("The element should be a CanvasRenderingContext2D.")
 }
