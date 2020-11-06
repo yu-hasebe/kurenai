@@ -109,10 +109,10 @@ impl KeyEvent {
 
     fn add_event_listener_with_callback(type_: &str, listener: &js_sys::Function) {
         web_sys::window()
-            .expect("No global window")
+            .expect("No global window.")
             .document()
-            .expect("No document in window")
+            .expect("The window should have document.")
             .add_event_listener_with_callback(type_, listener)
-            .expect("Failed to call add_event_listener_with_callback");
+            .expect("Failed to call add_event_listener_with_callback.");
     }
 }

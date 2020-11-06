@@ -1,3 +1,4 @@
+use kurenai::canvas;
 use kurenai::game_loop::GameLoop;
 use kurenai::game_service::GameService;
 use kurenai::key_event::KeyEvent;
@@ -15,7 +16,7 @@ impl GameService for TestGameService {
     fn update(&self) {
         // Update data
     }
-    fn draw(&self) {
+    fn draw(&self, context: &web_sys::CanvasRenderingContext2d) {
         // Draw
     }
 }
@@ -29,5 +30,6 @@ impl TestGameService {
 #[wasm_bindgen_test]
 fn pass() {
     let test_game_service = TestGameService::new();
-    GameLoop::run(test_game_service);
+    let canvas_rendering_context = canvas::get_canvas_rendering_context_2d("main-canvas");
+    GameLoop::run(test_game_service, canvas_rendering_context);
 }
