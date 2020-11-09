@@ -1,5 +1,8 @@
 # kurenai
-A 2d game engine for WebAssembly. This is a project in development. It works now, but it can dramatically change.
+A 2D game engine based on wasm and HTMLCanvas.
 
-# sample
+# Sample
 https://github.com/yu-hasebe/kurenai_rpg/
+
+# Documentation
+https://docs.rs/kurenai/
